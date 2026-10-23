@@ -83,6 +83,11 @@ form.addEventListener('submit', async (e) => {
     }
   } catch (err) {
     const offline = err instanceof LookupError;
+    if (offline && navigator.onLine === false) {
+      showResult('error', 'You’re offline',
+        'The breach check needs an internet connection to reach Have I Been Pwned. Everything else on this site works offline.');
+      return;
+    }
     showResult('error', 'Couldn’t complete the check',
       offline ? 'Have I Been Pwned didn’t respond. Check your internet connection, or a blocker that may stop requests to api.pwnedpasswords.com, then try again.'
         : String(err.message || err));

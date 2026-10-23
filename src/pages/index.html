@@ -1,7 +1,7 @@
 <!--meta
 {
   "path": "/",
-  "title": "Password Generator: Strong, Random Passwords Made on Your Device | MyPasswordCreator",
+  "title": "Password and PIN Generator: Strong, Random, Made on Your Device | MyPasswordCreator",
   "ogTitle": "Free password generator that never sees your password",
   "description": "Generate strong, random passwords in your browser with cryptographically secure randomness. Nothing is sent or saved. Adjustable length, symbols, and look-alike filtering.",
   "nav": "generator",
@@ -21,7 +21,27 @@
       {{> vault vaultLabel="Generated password" copyLabel="Copy password" newLabel="New password"}}
 
       <form class="controls" data-controls>
-        <div>
+        <fieldset class="control-group">
+          <legend>Type</legend>
+          <div class="select-row">
+            <label class="seg"><input type="radio" name="mode" value="password" checked><span>Password</span></label>
+            <label class="seg"><input type="radio" name="mode" value="pin"><span>PIN</span></label>
+          </div>
+        </fieldset>
+
+        <div data-pin-only hidden>
+          <label class="control-label" for="pin-range">PIN length</label>
+          <div class="length-row">
+            <input id="pin-range" type="range" min="4" max="12" value="6" data-pin-range aria-describedby="pin-hint">
+            <input id="pin-number" type="number" min="4" max="12" value="6" inputmode="numeric" data-pin-number aria-label="PIN length in digits">
+          </div>
+          <p class="hint" id="pin-hint" data-pin-hint>Use 6 digits or more where the device allows it.</p>
+          <div class="checks pin-checks">
+            <label class="check"><input type="checkbox" name="avoidweak" checked><span>Skip easy-to-guess PINs<small>Never gives repeats, runs, repeating patterns, years, or keypad lines like 1234, 1212, 1984, or 2580.</small></span></label>
+          </div>
+        </div>
+
+        <div data-pw-only>
           <label class="control-label" for="length-range">Length</label>
           <div class="length-row">
             <input id="length-range" type="range" min="8" max="64" value="16" data-length-range aria-describedby="length-hint">
@@ -30,9 +50,9 @@
           <p class="hint" id="length-hint" data-length-hint>16 characters is the recommended minimum.</p>
         </div>
 
-        <fieldset class="control-group">
+        <fieldset class="control-group" data-pw-only>
           <legend>Characters</legend>
-          <div class="toggles">
+          <div class="toggles" data-std-symbols>
             <label class="toggle"><input type="checkbox" name="cls" value="upper" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Uppercase</span><span class="sample">A–Z</span></label>
             <label class="toggle"><input type="checkbox" name="cls" value="lower" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Lowercase</span><span class="sample">a–z</span></label>
             <label class="toggle"><input type="checkbox" name="cls" value="digits" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Numbers</span><span class="sample">0–9</span></label>
@@ -41,14 +61,20 @@
           </div>
         </fieldset>
 
-        <fieldset class="control-group">
+        <fieldset class="control-group" data-pw-only>
           <legend>Options</legend>
           <div class="checks">
             <label class="check"><input type="checkbox" name="lookalikes"><span>Avoid look-alike characters<small>Leaves out 0 O o 1 l I | so the password is easier to read and type by hand.</small></span></label>
             <label class="check"><input type="checkbox" name="norepeats"><span>No repeated characters<small>Each character is used at most once. Some older systems require this.</small></span></label>
+            <label class="check"><input type="checkbox" name="customon"><span>The site only accepts certain symbols<small>Type exactly the symbols it allows. They replace the two symbol options above.</small></span></label>
+            <div class="custom-symbols" data-custom-wrap hidden>
+              <label class="visually-hidden" for="custom-symbols">Allowed symbols</label>
+              <input id="custom-symbols" type="text" value="!@#$%" maxlength="40" autocomplete="off" spellcheck="false" data-custom-symbols aria-describedby="custom-hint">
+              <p class="hint" id="custom-hint" data-custom-hint>Letters, numbers, and spaces are ignored.</p>
+            </div>
           </div>
         </fieldset>
-        <p class="hint">Every type you turn on is guaranteed to appear at least once, so the password passes sites that require one of each.</p>
+        <p class="hint" data-pw-only>Every type you turn on is guaranteed to appear at least once, so the password passes sites that require one of each.</p>
       </form>
     </div>
 

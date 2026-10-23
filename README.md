@@ -1,6 +1,7 @@
 # MyPasswordCreator.com
 
-Static site: password generator, passphrase generator, and private breach check.
+Static site: password and PIN generator, passphrase generator, Wi-Fi password generator with QR join card,
+and private breach check. Works offline after the first visit (service worker) and can be installed as an app.
 No framework, no runtime dependencies, no server code. Hosted on Cloudflare Workers (static assets).
 
 ## Layout
@@ -12,6 +13,11 @@ src/core/      Security logic (pure ES modules, unit-tested, reusable on other s
   passphrase.js  EFF-wordlist passphrases
   strength.js    rating + time-to-guess (assumes 1e11 guesses/sec)
   hibp.js        Have I Been Pwned k-anonymity lookup (padding, caching, real errors)
+  pin.js         PINs that skip repeats, runs, years, keypad lines, and known favourites
+  wifi.js        Wi-Fi keys (8–63 chars) and the WIFI: QR payload
+  qrcode.js      Vendored qrcode-generator 1.4.4 (MIT)
+  eff-*.js       EFF large (7,776) and short (1,296) word lists
+src/sw.js      Service worker template (offline support); build fills in the file list
 src/js/        Page scripts (UI only)
 src/css/       site.css (design tokens at the top)
 src/fonts/     Self-hosted Public Sans + JetBrains Mono (OFL)

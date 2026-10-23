@@ -129,6 +129,20 @@ for (const file of readdirSync(join(SRC, 'pages')).filter((f) => f.endsWith('.ht
   console.log(`  ${out}`);
 }
 
+// Service worker: precache every page and every asset in this build.
+const swPages = sitemap.map((s) => new URL(s.loc).pathname.replace(/\/$/, '') || '/');
+const swAssets = [
+  ...walk(join(DIST, 'assets', BUILD)).filter((f) => !/LICENSE|\.txt$/.test(f)).map((f) => f.slice(DIST.length).split('\\').join('/')),
+  '/favicon.svg', '/favicon-32.png', '/apple-touch-icon.png', '/manifest.webmanifest', '/img/icon-192.png', '/img/icon-512.png',
+];
+writeFileSync(
+  join(DIST, 'sw.js'),
+  readFileSync(join(SRC, 'sw.js'), 'utf8')
+    .replace('__BUILD__', BUILD)
+    .replace('__PAGES__', JSON.stringify(swPages))
+    .replace('__ASSETS__', JSON.stringify(swAssets)),
+);
+
 writeFileSync(
   join(DIST, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemap

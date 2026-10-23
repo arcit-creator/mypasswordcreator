@@ -1,5 +1,6 @@
 import { generatePassphrase, passphraseEntropyBits, SEPARATORS, MIN_WORDS, MAX_WORDS } from '../core/passphrase.js';
 import { EFF_WORDLIST } from '../core/eff-wordlist.js';
+import { EFF_SHORT_WORDLIST } from '../core/eff-short-wordlist.js';
 import { describeStrength } from '../core/strength.js';
 import { renderSecret, renderStrength, setRangeFill, copyText, toast, flashButton, createHistory } from './ui.js';
 
@@ -13,6 +14,8 @@ const form = document.querySelector('[data-controls]');
 const range = form.querySelector('[data-words-range]');
 const number = form.querySelector('[data-words-number]');
 const hint = form.querySelector('[data-words-hint]');
+const listHint = form.querySelector('[data-list-hint]');
+const LISTS = { long: EFF_WORDLIST, short: EFF_SHORT_WORDLIST };
 const history = createHistory(document.querySelector('[data-history]'), { fileLabel: 'Passphrase' });
 secretEl.classList.add('is-passphrase');
 
@@ -23,6 +26,7 @@ const clamp = (n) => (Number.isFinite(n) ? Math.min(MAX_WORDS, Math.max(MIN_WORD
 function readOptions() {
   return {
     words: clamp(parseInt(number.value, 10)),
+    list: form.querySelector('input[name="list"]:checked')?.value === 'short' ? 'short' : 'long',
     separator: form.querySelector('input[name="sep"]:checked')?.value || 'hyphen',
     capitalizeWords: form.elements.caps.checked,
     addNumber: form.elements.digit.checked,
@@ -44,6 +48,7 @@ function restore() {
     const r = form.querySelector(`input[name="sep"][value="${s.separator}"]`);
     if (r) r.checked = true;
   }
+  if (s.list === 'short') form.querySelector('input[name="list"][value="short"]').checked = true;
   form.elements.caps.checked = !!s.capitalizeWords;
   form.elements.digit.checked = !!s.addNumber;
 }
@@ -51,13 +56,19 @@ function restore() {
 function generate() {
   const opts = readOptions();
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(opts)); } catch { /* optional */ }
-  hint.classList.toggle('is-warn', opts.words < 5);
-  hint.textContent = opts.words < 5
-    ? 'Fewer than 5 words is weak on its own. Pair it with two-factor authentication.'
-    : 'Six words is the EFF’s recommendation.';
-  current = generatePassphrase({ wordlist: EFF_WORDLIST, ...opts });
+  const wordlist = LISTS[opts.list];
+  const short = opts.list === 'short';
+  listHint.textContent = short
+    ? '1,296 words of 3 to 5 letters. Easier to type on a TV remote, but use 8 or more.'
+    : '7,776 everyday words. The strongest per word.';
+  const weakBelow = short ? 7 : 5;
+  hint.classList.toggle('is-warn', opts.words < weakBelow);
+  hint.textContent = opts.words < weakBelow
+    ? (short ? 'Short words are weaker each, so use at least 7, ideally 8.' : 'Fewer than 5 words is weak on its own. Pair it with two-factor authentication.')
+    : (short ? 'Eight short words match six standard ones.' : 'Six words is the EFF\u2019s recommendation.');
+  current = generatePassphrase({ wordlist, words: opts.words, separator: opts.separator, capitalizeWords: opts.capitalizeWords, addNumber: opts.addNumber });
   renderSecret(secretEl, current, { separator: SEPARATORS[opts.separator] });
-  renderStrength(vault, describeStrength(passphraseEntropyBits({ wordlistSize: EFF_WORDLIST.length, words: opts.words, addNumber: opts.addNumber })));
+  renderStrength(vault, describeStrength(passphraseEntropyBits({ wordlistSize: wordlist.length, words: opts.words, addNumber: opts.addNumber })));
 }
 
 range.addEventListener('input', () => { number.value = range.value; setRangeFill(range); generate(); });

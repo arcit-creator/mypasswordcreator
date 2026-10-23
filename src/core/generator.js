@@ -15,12 +15,29 @@ export const LOOKALIKES = '0Oo1lI|';
 export const MIN_LENGTH = 4;
 export const MAX_LENGTH = 128;
 
-/** Returns the character sets actually in use, after filtering look-alikes. */
-export function resolveClasses({ classes, avoidLookalikes = false }) {
+/**
+ * Cleans a user-supplied list of allowed symbols: keeps printable ASCII
+ * punctuation only (no letters, digits, or spaces), each character once.
+ */
+export function sanitizeSymbols(text = '') {
+  let out = '';
+  for (const ch of String(text)) {
+    const code = ch.charCodeAt(0);
+    if (ch.length !== 1 || code < 33 || code > 126 || /[A-Za-z0-9]/.test(ch)) continue;
+    if (!out.includes(ch)) out += ch;
+  }
+  return out;
+}
+
+/**
+ * Returns the character sets actually in use, after filtering look-alikes.
+ * The 'custom' class uses `customSymbols` (for sites that only accept some symbols).
+ */
+export function resolveClasses({ classes, avoidLookalikes = false, customSymbols = '' }) {
   const keys = [...new Set(classes)];
   const sets = [];
   for (const key of keys) {
-    const base = CHARACTER_CLASSES[key];
+    const base = key === 'custom' ? sanitizeSymbols(customSymbols) : CHARACTER_CLASSES[key];
     if (base === undefined) throw new Error(`Unknown character class: ${key}`);
     const chars = avoidLookalikes ? [...base].filter((ch) => !LOOKALIKES.includes(ch)).join('') : base;
     if (chars.length > 0) sets.push({ key, chars });

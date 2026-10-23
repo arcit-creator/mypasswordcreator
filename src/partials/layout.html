@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/{{build}}/fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/{{build}}/css/site.css">
 {{schema}}
@@ -37,8 +38,9 @@
       MyPasswordCreator
     </a>
     <nav class="nav" id="site-nav" aria-label="Main">
-      <a href="/" {{nav:generator}}>Password generator</a>
-      <a href="/passphrase-generator" {{nav:passphrase}}>Passphrase generator</a>
+      <a href="/" {{nav:generator}}>Passwords</a>
+      <a href="/passphrase-generator" {{nav:passphrase}}>Passphrases</a>
+      <a href="/wifi-password-generator" {{nav:wifi}}>Wi-Fi</a>
       <a href="/password-check" {{nav:check}}>Breach check</a>
       <a href="/tips" {{nav:tips}}>Tips</a>
     </nav>
@@ -57,13 +59,16 @@
       <p>Provided as is, without warranty. See <a href="/privacy">privacy and terms</a>.</p>
     </div>
     <ul class="footer-links">
-      <li><a href="/">Password generator</a></li>
+      <li><a href="/">Password and PIN generator</a></li>
       <li><a href="/passphrase-generator">Passphrase generator</a></li>
+      <li><a href="/wifi-password-generator">Wi-Fi password generator</a></li>
       <li><a href="/password-check">Breach check</a></li>
       <li><a href="/tips">Tips</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/privacy">Privacy and terms</a></li>
     </ul>
+    <p class="offline-note" data-offline-note hidden></p>
+    <button class="btn btn-secondary install-btn" type="button" data-install hidden>Install as an app</button>
   </div>
 </footer>
 <div class="toast" role="status" aria-live="polite" data-toast></div>

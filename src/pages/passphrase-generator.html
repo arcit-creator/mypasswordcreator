@@ -30,6 +30,15 @@
         </div>
 
         <fieldset class="control-group">
+          <legend>Word list</legend>
+          <div class="select-row">
+            <label class="seg"><input type="radio" name="list" value="long" checked><span>Standard words</span></label>
+            <label class="seg"><input type="radio" name="list" value="short"><span>Short words</span></label>
+          </div>
+          <p class="hint" data-list-hint>7,776 everyday words. The strongest per word.</p>
+        </fieldset>
+
+        <fieldset class="control-group">
           <legend>Separator</legend>
           <div class="select-row">
             <label class="seg"><input type="radio" name="sep" value="hyphen" checked><span>Hyphen -</span></label>
@@ -57,7 +66,8 @@
   <div class="wrap"><div class="prose">
     <h2 id="why-pp">When to use a passphrase</h2>
     <p>Use one where you have to type it yourself: your computer login, your password manager's master password, a Wi-Fi network, or an account on a TV. For everything else, a password manager filling in a random password is simpler.</p>
+    <p>Typing on a TV remote or game controller? Choose <strong>Short words</strong>. Every word is 3 to 5 letters, so there are fewer letters to hunt for. Use 8 short words to match the strength of 6 standard ones.</p>
     <p>The strength comes from the words being picked at random, not from you choosing them. A phrase you make up, like a song lyric, is much weaker because attackers try common phrases first.</p>
-    <p class="small muted">Word list: <a href="https://www.eff.org/dice">EFF Large Wordlist</a> by the Electronic Frontier Foundation, used under CC BY 3.0 US.</p>
+    <p class="small muted">Word lists: <a href="https://www.eff.org/dice">EFF Large Wordlist and Short Wordlist</a> by the Electronic Frontier Foundation, used under CC BY 3.0 US.</p>
   </div></div>
 </section>
