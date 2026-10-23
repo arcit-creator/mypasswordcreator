@@ -28,19 +28,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// "Install as an app" (Chrome and Edge offer this; Safari uses Share > Add to Home Screen).
-let installEvent = null;
-const installBtn = document.querySelector('[data-install]');
+// Install prompt (Chrome, Edge, Android). Captured on every page; the /app page offers the button.
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
-  installEvent = e;
-  if (installBtn) installBtn.hidden = false;
+  window.__mpcInstallPrompt = e;
+  window.dispatchEvent(new Event('mpc:installable'));
 });
-installBtn?.addEventListener('click', async () => {
-  if (!installEvent) return;
-  installEvent.prompt();
-  await installEvent.userChoice;
-  installEvent = null;
-  installBtn.hidden = true;
-});
-window.addEventListener('appinstalled', () => { if (installBtn) installBtn.hidden = true; });

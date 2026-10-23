@@ -1,0 +1,57 @@
+<!--meta
+{
+  "path": "/app",
+  "title": "Install MyPasswordCreator as an Offline App | MyPasswordCreator",
+  "ogTitle": "A password generator that works with no internet",
+  "description": "Install MyPasswordCreator on your phone or computer. It opens like an app and works with no internet connection, so you can see for yourself that nothing is sent.",
+  "nav": "app",
+  "scripts": ["app-page.js"],
+  "priority": "0.7"
+}
+-->
+<div class="wrap">
+  <div class="page-head">
+    <h1>Take it with you, no internet needed</h1>
+    <p class="lede">Install MyPasswordCreator and it opens like any other app on your phone or computer. It works in airplane mode, which is the simplest proof that nothing you generate is sent anywhere.</p>
+  </div>
+
+  <div class="tool">
+    <div>
+      <section class="install-card" aria-labelledby="install-here" data-install-card>
+        <h2 id="install-here" data-install-title>Install on this device</h2>
+        <div data-install-body></div>
+        <button class="btn btn-primary" type="button" data-install-now hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+          Install app
+        </button>
+        <p class="install-status" data-offline-status>Checking offline support…</p>
+      </section>
+
+      <section class="section" aria-labelledby="prove">
+        <h2 id="prove">Try the airplane-mode test</h2>
+        <ol class="steps">
+          <li>Open the app, or this site, once while you're online.</li>
+          <li>Turn on airplane mode, or unplug from the internet.</li>
+          <li>Generate passwords, passphrases, PINs, and Wi-Fi cards. Everything still works.</li>
+        </ol>
+        <p class="muted">The one exception is the breach check, which has to ask Have I Been Pwned and needs a connection.</p>
+      </section>
+
+      <section class="section other-devices" aria-labelledby="others">
+        <h2 id="others">Other devices</h2>
+        <div class="device-list" data-device-list></div>
+      </section>
+    </div>
+
+    <aside class="aside" aria-label="About the app">
+      <section class="promise">
+        <h2>What the app is</h2>
+        <ul>
+          <li><strong>The same site, saved.</strong> Not a separate download from an app store. Your browser keeps a copy of these pages and opens them in their own window.</li>
+          <li><strong>Updates itself.</strong> When you're online, it picks up the latest version automatically.</li>
+          <li><strong>Easy to remove.</strong> Delete it like any other app. Nothing else is installed.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
