@@ -33,20 +33,24 @@ npm run deploy    # build + wrangler deploy (needs `npx wrangler login` once)
 
 Node 20+. No `npm install` needed except for wrangler, which npx fetches.
 
-## Deploy (GitHub → Cloudflare Workers)
+## Deploy (live setup: GitHub → Cloudflare Pages)
 
-1. Create a GitHub repo and push this folder.
-2. Cloudflare dashboard → Workers & Pages → Create → Import a repository → pick the repo.
-   - Build command: `npm run build`
-   - Deploy command: `npx wrangler deploy`
-3. Test on the `*.workers.dev` URL (all pages, breach check, mobile, the old `/content/*.aspx` links).
-4. Domain: mypasswordcreator.com must be on Cloudflare DNS. Worker → Settings → Domains & Routes →
-   add Custom Domain `mypasswordcreator.com` and `www.mypasswordcreator.com`.
-5. Add a Redirect Rule: `www.mypasswordcreator.com/*` → `https://mypasswordcreator.com/${1}` (301).
-6. After cutover: Google Search Console → submit `https://mypasswordcreator.com/sitemap.xml`.
-7. Optional: Cloudflare Web Analytics (cookieless). If you enable the JS beacon, add
-   `https://static.cloudflareinsights.com` to script-src and `https://cloudflareinsights.com`
-   to connect-src in `public/_headers`, and update the privacy page.
+Repo: github.com/arcit-creator/mypasswordcreator (private). Cloudflare Pages project `mypasswordcreator`:
+- Framework preset: None
+- Build command: `npm run build`
+- Build output directory: `dist`
+
+Every push to `main` rebuilds and deploys automatically. Preview URL: https://mypasswordcreator.pages.dev
+Custom domains: mypasswordcreator.com and www.mypasswordcreator.com.
+
+Update workflow:
+```
+git add .
+git commit -m "what changed"
+git push
+```
+
+`wrangler.jsonc` is only used if you ever move to Workers (`npm run deploy`); Pages ignores it.
 
 ## Adding ads or analytics later
 
