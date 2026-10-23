@@ -1,0 +1,15 @@
+{
+  "name": "mypasswordcreator",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MyPasswordCreator.com — static site on Cloudflare Workers",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "preview": "npm run build && node scripts/serve.mjs",
+    "dev": "npm run build && npx wrangler dev",
+    "deploy": "npm run build && npx wrangler deploy"
+  },
+  "engines": { "node": ">=20" }
+}

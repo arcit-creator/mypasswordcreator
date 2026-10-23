@@ -1,0 +1,7 @@
+# Old ASP.NET URLs → new clean URLs (keeps search rankings)
+/default.aspx              /                      301
+/content/default.aspx      /                      301
+/content/check.aspx        /password-check        301
+/content/tips.aspx         /tips                  301
+/content/*                 /                      301
+/password-generator        /                      301

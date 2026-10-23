@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{url}}">
+<meta name="robots" content="{{robots}}">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MyPasswordCreator">
+<meta property="og:url" content="{{url}}">
+<meta property="og:title" content="{{ogTitle}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:image" content="{{origin}}/img/social-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MyPasswordCreator: strong passwords made on your device">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ogTitle}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image" content="{{origin}}/img/social-preview.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/{{build}}/fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/{{build}}/css/site.css">
+{{schema}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 34 34" aria-hidden="true"><rect class="bm-bg" width="34" height="34" rx="9"/><circle class="bm-fg" cx="8.5" cy="17" r="2.5"/><circle class="bm-fg" cx="15" cy="17" r="2.5"/><circle class="bm-fg" cx="21.5" cy="17" r="2.5"/><rect class="bm-fg" x="26" y="10" width="2.4" height="14" rx="1.2"/></svg>
+      MyPasswordCreator
+    </a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="/" {{nav:generator}}>Password generator</a>
+      <a href="/passphrase-generator" {{nav:passphrase}}>Passphrase generator</a>
+      <a href="/password-check" {{nav:check}}>Breach check</a>
+      <a href="/tips" {{nav:tips}}>Tips</a>
+    </nav>
+    <button class="icon-btn menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+{{content}}
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p><strong>MyPasswordCreator</strong> makes passwords in your browser. Nothing you generate or check is sent to us or stored.</p>
+      <p>Provided as is, without warranty. See <a href="/privacy">privacy and terms</a>.</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="/">Password generator</a></li>
+      <li><a href="/passphrase-generator">Passphrase generator</a></li>
+      <li><a href="/password-check">Breach check</a></li>
+      <li><a href="/tips">Tips</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/privacy">Privacy and terms</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+<script type="module" src="/assets/{{build}}/js/site.js"></script>
+{{scripts}}
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!--meta
+{
+  "path": "/tips",
+  "title": "Password Security Tips and FAQ (2026 NIST Guidance) | MyPasswordCreator",
+  "ogTitle": "Password tips that match current NIST guidance",
+  "description": "How long a password should be, whether symbols matter, when to change passwords, and how to store them, based on NIST SP 800-63B-4.",
+  "nav": "tips",
+  "scripts": [],
+  "priority": "0.8",
+  "schema": "faq"
+}
+-->
+<div class="wrap">
+  <div class="page-head">
+    <h1>Password tips that hold up</h1>
+    <p class="lede">Plain answers based on NIST's current digital identity guidelines, the standard US agencies and most security teams follow.</p>
+  </div>
+
+  <div class="faq" data-faq>
+    <details open>
+      <summary>How long should my password be?</summary>
+      <div class="answer">
+        <p>Use at least <strong>16 random characters</strong> for anything important. That's this site's default.</p>
+        <p>NIST SP 800-63B-4 requires at least 15 characters when a password is the only thing protecting an account, and at least 8 when it's paired with a second factor like an authenticator app. Longer is always better, and it matters far more than adding symbol types:</p>
+        {{lengthTable}}
+        <p class="small">Average time to guess a randomly generated password at 100 billion guesses per second, using uppercase, lowercase, numbers, and common symbols. A human-chosen password of the same length falls much faster.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Do I need symbols and numbers?</summary>
+      <div class="answer">
+        <p>Not for strength, if the password is long and random. NIST now tells services not to force character-type rules, because people respond with predictable patterns like <code>Password1!</code>.</p>
+        <p>Many sites still demand one of each, so the generator guarantees every type you turn on appears at least once.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Should every account have a different password?</summary>
+      <div class="answer">
+        <p>Yes. This is the single most important habit. When one site leaks, attackers automatically try the same email and password on banks, email, and shopping sites. A unique password for each account turns one breach into one problem instead of many.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How am I supposed to remember them all?</summary>
+      <div class="answer">
+        <p>Don't. Use a password manager, such as the one built into your phone or browser, or a dedicated app like Bitwarden or 1Password. It stores and fills random passwords for you.</p>
+        <p>You then remember just one strong <a href="/passphrase-generator">passphrase</a> to unlock it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Should I change my passwords every few months?</summary>
+      <div class="answer">
+        <p>No. NIST says services shouldn't force regular changes, because people respond with small, guessable edits like <code>Spring2026</code> to <code>Summer2026</code>. Change a password when there's a reason: it appeared in a breach, you shared it, or you suspect someone else knows it.</p>
+        <p>You can see whether one has leaked with the <a href="/password-check">breach check</a>.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What's two-factor authentication, and do I need it?</summary>
+      <div class="answer">
+        <p>Two-factor authentication (2FA) asks for something besides your password, like a code from an app on your phone. Even if your password leaks, an attacker can't sign in without that second step. Turn it on for email, banking, and anything with payment details.</p>
+        <p>Prefer an authenticator app, a security key, or a passkey over text-message codes, which can be intercepted.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What makes a password weak?</summary>
+      <div class="answer">
+        <p>Anything a person would think of, and therefore an attacker's software tries early:</p>
+        <ul>
+          <li>Names, birthdays, pets, teams, or anything findable on social media</li>
+          <li>Dictionary words with swaps like <code>P@ssw0rd</code>; cracking tools try these automatically</li>
+          <li>Keyboard patterns like <code>qwerty</code> or <code>1qaz2wsx</code></li>
+          <li>The same password, or a small variation, used on more than one site</li>
+          <li>Anything shorter than 12 characters</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Is it safe to create a password on a website?</summary>
+      <div class="answer">
+        <p>It's a fair question, and you shouldn't have to take our word for it. On this site:</p>
+        <ul>
+          <li>Passwords are made by code running in your browser. Open your browser's developer tools, go to the Network tab, and generate a few: no request is made.</li>
+          <li>The site still works with your internet turned off once the page has loaded.</li>
+          <li>There are no cookies, no ads, and no analytics or tracking scripts.</li>
+          <li>The site sends a strict Content Security Policy, so the browser blocks scripts from anywhere else.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Is it OK to save passwords in a text file?</summary>
+      <div class="answer">
+        <p>Only briefly. The "Download as .txt" option is meant for handing a batch of new passwords to yourself while setting up accounts. Move them into a password manager, then delete the file and empty the trash. A plain text file can be read by anyone or any malware with access to your computer.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Why is your strength estimate different from other sites?</summary>
+      <div class="answer">
+        <p>Every estimate depends on how fast you assume the attacker is. We assume 100 billion guesses per second, a determined offline attack against a stolen database that uses a fast hash. Sites that assume slower attackers show bigger, more flattering numbers.</p>
+        <p>Our meter also measures how the password was made, not how it looks. That's accurate for passwords from this generator. For a password you made up, use the breach check, and assume it's weaker than it looks.</p>
+      </div>
+    </details>
+  </div>
+
+  <p class="small muted faq-source">Source: <a href="https://pages.nist.gov/800-63-4/sp800-63b.html">NIST Special Publication 800-63B-4, Digital Identity Guidelines: Authentication and Authenticator Management</a>.</p>
+</div>

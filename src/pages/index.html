@@ -1,0 +1,77 @@
+<!--meta
+{
+  "path": "/",
+  "title": "Password Generator: Strong, Random Passwords Made on Your Device | MyPasswordCreator",
+  "ogTitle": "Free password generator that never sees your password",
+  "description": "Generate strong, random passwords in your browser with cryptographically secure randomness. Nothing is sent or saved. Adjustable length, symbols, and look-alike filtering.",
+  "nav": "generator",
+  "scripts": ["generator-page.js"],
+  "priority": "1.0",
+  "schema": "app"
+}
+-->
+<div class="wrap">
+  <div class="page-head">
+    <h1>Strong passwords, made on your device</h1>
+    <p class="lede">Generated in your browser with its secure random number generator. Nothing is sent, saved, or logged.</p>
+  </div>
+
+  <div class="tool">
+    <div>
+      {{> vault vaultLabel="Generated password" copyLabel="Copy password" newLabel="New password"}}
+
+      <form class="controls" data-controls>
+        <div>
+          <label class="control-label" for="length-range">Length</label>
+          <div class="length-row">
+            <input id="length-range" type="range" min="8" max="64" value="16" data-length-range aria-describedby="length-hint">
+            <input id="length-number" type="number" min="4" max="128" value="16" inputmode="numeric" data-length-number aria-label="Length in characters">
+          </div>
+          <p class="hint" id="length-hint" data-length-hint>16 characters is the recommended minimum.</p>
+        </div>
+
+        <fieldset class="control-group">
+          <legend>Characters</legend>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" name="cls" value="upper" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Uppercase</span><span class="sample">A–Z</span></label>
+            <label class="toggle"><input type="checkbox" name="cls" value="lower" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Lowercase</span><span class="sample">a–z</span></label>
+            <label class="toggle"><input type="checkbox" name="cls" value="digits" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Numbers</span><span class="sample">0–9</span></label>
+            <label class="toggle"><input type="checkbox" name="cls" value="symbols" checked><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">Common symbols</span><span class="sample">! @ # $ % ^ &amp; * - _ = + ?</span></label>
+            <label class="toggle"><input type="checkbox" name="cls" value="extra"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="name">More symbols</span><span class="sample">( ) [ ] { } &lt; &gt; ~ | : ; , . /</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="control-group">
+          <legend>Options</legend>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="lookalikes"><span>Avoid look-alike characters<small>Leaves out 0 O o 1 l I | so the password is easier to read and type by hand.</small></span></label>
+            <label class="check"><input type="checkbox" name="norepeats"><span>No repeated characters<small>Each character is used at most once. Some older systems require this.</small></span></label>
+          </div>
+        </fieldset>
+        <p class="hint">Every type you turn on is guaranteed to appear at least once, so the password passes sites that require one of each.</p>
+      </form>
+    </div>
+
+    {{> aside thing="password" thing_cap="Password"}}
+  </div>
+</div>
+
+<section class="section" aria-labelledby="how">
+  <div class="wrap">
+    <h2 id="how">How it works</h2>
+    <div class="explain">
+      <div>
+        <h3>Real randomness</h3>
+        <p>Each character is picked with <code>crypto.getRandomValues</code>, the same secure random source browsers use for encryption keys. Picks are unbiased, so no character is more likely than another.</p>
+      </div>
+      <div>
+        <h3>Honest strength</h3>
+        <p>The meter counts exactly how many passwords your settings could produce. The time estimate assumes an attacker making 100 billion guesses per second, which is a well-funded offline attack.</p>
+      </div>
+      <div>
+        <h3>Length beats tricks</h3>
+        <p>Adding characters raises strength far faster than adding symbol types. Current NIST guidance asks for at least 15 characters when a password is the only thing protecting an account. <a href="/tips">Read the tips</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>

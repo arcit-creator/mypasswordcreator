@@ -1,0 +1,39 @@
+<!--meta
+{
+  "path": "/privacy",
+  "title": "Privacy and Terms | MyPasswordCreator",
+  "ogTitle": "Privacy and terms",
+  "description": "What MyPasswordCreator collects (nothing you generate or check), what our hosting provider and Have I Been Pwned see, and the terms for using the site.",
+  "nav": "",
+  "scripts": [],
+  "priority": "0.3"
+}
+-->
+<div class="wrap">
+  <div class="page-head">
+    <h1>Privacy and terms</h1>
+    <p class="lede">Short version: we never see the passwords you generate or check, and we don't track you.</p>
+  </div>
+
+  <div class="prose">
+    <p class="muted small">Last updated {{buildDate}}</p>
+
+    <h2>Passwords and passphrases</h2>
+    <p>Everything you generate is created by code running in your browser. It isn't sent to us or anyone else, and we have no way to see it. The "Copied this session" list is held in the page's memory and is erased when you close or reload the tab.</p>
+
+    <h2>Breach check</h2>
+    <p>When you check a password, your browser computes its SHA-1 hash and sends only the first 5 characters of that hash to the <a href="https://haveibeenpwned.com/Passwords">Have I Been Pwned</a> Pwned Passwords service, which is run by a third party. Like any website, that service receives your IP address with the request. It can't determine your password from 5 hash characters. Files you audit are read in your browser and never uploaded.</p>
+
+    <h2>What's stored on your device</h2>
+    <p>We save your generator settings (like length and character types) in your browser's local storage, so they're the same next time. No passwords are stored. You can erase these by clearing this site's data in your browser.</p>
+    <p>We don't use cookies.</p>
+
+    <h2>Hosting and logs</h2>
+    <p>The site is hosted on Cloudflare. Like every web host, Cloudflare processes your IP address and basic request information (such as which page was requested and your browser type) to deliver the site and protect it from attacks. See <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>.</p>
+    <p>We use no analytics, advertising, or tracking scripts. If that ever changes, this page will be updated first and will say exactly what was added.</p>
+
+    <h2>Terms of use</h2>
+    <p>MyPasswordCreator is free to use. It's provided as is, without warranty of any kind, express or implied. We work to make it correct and secure, but we can't guarantee it's free of errors, and you're responsible for how you use, store, and protect your passwords. To the fullest extent permitted by law, we aren't liable for any loss or damage arising from your use of the site.</p>
+    <p>Don't use the site to attack, overload, or interfere with it or any other service, including the Have I Been Pwned API.</p>
+  </div>
+</div>
