@@ -13,6 +13,20 @@ const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
 const ORIGIN = 'https://mypasswordcreator.com';
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
+const CONFIG = JSON.parse(readFileSync(join(ROOT, 'site.config.json'), 'utf8'));
+const safeUrl = (u) => (typeof u === 'string' && /^https:\/\/[^\s"<>]+$/.test(u) ? u : '');
+const SUPPORT_URL = safeUrl(CONFIG.supportUrl);
+const BUSINESS_URL = safeUrl(CONFIG.businessUrl);
+function footerExtras() {
+  const links = [];
+  if (SUPPORT_URL) links.push(`<a href="${esc(SUPPORT_URL)}" rel="noopener">${esc(CONFIG.supportLabel || 'Support this site')}</a>`);
+  if (BUSINESS_URL) links.push(`<a href="${esc(BUSINESS_URL)}" rel="noopener">${esc(CONFIG.businessLabel || 'For business')}</a>`);
+  return links.length ? `      <p class="footer-extras">${links.join(' <span aria-hidden="true">|</span> ')}</p>` : '';
+}
+function supportPara() {
+  if (!SUPPORT_URL) return '';
+  return `    <h2>Support this site</h2>\n    <p>MyPasswordCreator is free and has no ads. If it's useful to you, you can <a href="${esc(SUPPORT_URL)}" rel="noopener">support it here</a>. Support goes to keeping the site running and building new tools. It isn't a charity, so it isn't tax-deductible.</p>`;
+}
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -103,11 +117,13 @@ for (const file of readdirSync(join(SRC, 'pages')).filter((f) => f.endsWith('.ht
   const meta = JSON.parse(m[1]);
   let content = renderPartials(raw.slice(m[0].length))
     .replaceAll('{{lengthTable}}', lengthTable())
+    .replaceAll('{{supportPara}}', supportPara())
     .replaceAll('{{buildDate}}', new Date(BUILD_DATE + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }));
 
   const url = ORIGIN + (meta.path === '/' ? '/' : meta.path);
   let html = layout
     .replace('{{content}}', content)
+    .replaceAll('{{footerExtras}}', footerExtras())
     .replaceAll('{{title}}', esc(meta.title))
     .replaceAll('{{ogTitle}}', esc(meta.ogTitle || meta.title))
     .replaceAll('{{description}}', esc(meta.description))
