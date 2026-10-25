@@ -1,7 +1,8 @@
 {
   "_readme": "Site-wide settings. Leave a URL empty to hide its link. Rebuild (git push) after changing.",
   "supportUrl": "https://ko-fi.com/mypasswordcreator",
-  "supportLabel": "Support this site",
+  "supportIntro": "If this site helped you, consider helping us back.",
+  "supportLabel": "Buy us a cup of coffee on Ko-fi",
   "businessUrl": "",
   "businessLabel": "Need this for your business? SecurePasscode."
 }

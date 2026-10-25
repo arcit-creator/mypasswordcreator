@@ -17,15 +17,19 @@ const CONFIG = JSON.parse(readFileSync(join(ROOT, 'site.config.json'), 'utf8'));
 const safeUrl = (u) => (typeof u === 'string' && /^https:\/\/[^\s"<>]+$/.test(u) ? u : '');
 const SUPPORT_URL = safeUrl(CONFIG.supportUrl);
 const BUSINESS_URL = safeUrl(CONFIG.businessUrl);
+const CUP_ICON = '<svg class="cup" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 10h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 11.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c-.8.9-.8 1.6 0 2.5s.8 1.6 0 2.5"/><path d="M12 3.5c-.8.9-.8 1.6 0 2.5s.8 1.6 0 2.5"/></svg>';
 function footerExtras() {
-  const links = [];
-  if (SUPPORT_URL) links.push(`<a href="${esc(SUPPORT_URL)}" rel="noopener">${esc(CONFIG.supportLabel || 'Support this site')}</a>`);
-  if (BUSINESS_URL) links.push(`<a href="${esc(BUSINESS_URL)}" rel="noopener">${esc(CONFIG.businessLabel || 'For business')}</a>`);
-  return links.length ? `      <p class="footer-extras">${links.join(' <span aria-hidden="true">|</span> ')}</p>` : '';
+  const out = [];
+  if (SUPPORT_URL) {
+    const intro = CONFIG.supportIntro ? `${esc(CONFIG.supportIntro)} ` : '';
+    out.push(`      <p class="footer-support">${CUP_ICON}<span>${intro}<a href="${esc(SUPPORT_URL)}" rel="noopener">${esc(CONFIG.supportLabel || 'Support this site')}</a></span></p>`);
+  }
+  if (BUSINESS_URL) out.push(`      <p class="footer-extras"><a href="${esc(BUSINESS_URL)}" rel="noopener">${esc(CONFIG.businessLabel || 'For business')}</a></p>`);
+  return out.join('\n');
 }
 function supportPara() {
   if (!SUPPORT_URL) return '';
-  return `    <h2>Support this site</h2>\n    <p>MyPasswordCreator is free and has no ads. If it's useful to you, you can <a href="${esc(SUPPORT_URL)}" rel="noopener">support it here</a>. Support goes to keeping the site running and building new tools. It isn't a charity, so it isn't tax-deductible.</p>`;
+  return `    <h2>Support this site</h2>\n    <p>MyPasswordCreator is free and has no ads. If it's useful to you, you can <a href="${esc(SUPPORT_URL)}" rel="noopener">buy us a cup of coffee on Ko-fi</a>. Support goes to keeping the site running and building new tools. It isn't a charity, so it isn't tax-deductible.</p>`;
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

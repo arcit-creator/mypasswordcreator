@@ -30,7 +30,7 @@ test/          node --test
 
 ## Site settings (site.config.json)
 
-- `supportUrl`: your Ko-fi page (must start with https://). When set, a "Support this site" link appears in the footer and a short section on the About page. Empty = hidden.
+- `supportUrl`: your Ko-fi page (must start with https://). When set, a coffee-cup support line appears in the footer (`supportIntro` + linked `supportLabel`) and a short section on the About page. Empty = hidden.
 - `businessUrl`: SecurePasscode.com once it exists. When set, the footer shows "Need this for your business? SecurePasscode." Empty = hidden.
 - Edit the file, then commit and push. Cloudflare rebuilds automatically.
 
