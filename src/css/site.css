@@ -793,3 +793,55 @@ ol.steps li { padding-left: 4px; }
 .footer-support { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px !important; }
 .footer-support a { white-space: nowrap; }
 .footer-support .cup { flex: none; color: var(--accent); margin-top: 1px; }
+
+/* ---------- Bulk generator ---------- */
+.bulk-who { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 20px; align-items: start; }
+.count-input, .bulk-who textarea {
+  font: inherit;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--ink);
+}
+.count-input { font-family: var(--mono); font-size: 1.05rem; }
+.count-input:disabled { background: var(--wash); color: var(--ink-2); }
+.bulk-who textarea { font-family: var(--mono); font-size: 0.95rem; resize: vertical; min-height: 7.5rem; }
+.count-input:focus-visible, .bulk-who textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.optional { font-weight: 400; color: var(--ink-2); }
+.bulk-go { display: grid; gap: 4px; justify-items: start; }
+.bulk-go .hint { margin-top: 6px; }
+
+.bulk-result { margin: 40px 0 8px; scroll-margin-top: 16px; }
+.bulk-result-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 20px; }
+.bulk-result-head h2 { margin: 0; }
+.bulk-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.csv-warning {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--warn);
+  border-left-width: 4px;
+  border-radius: var(--r-sm);
+  background: var(--warn-soft);
+  font-size: 0.95rem;
+  max-width: none;
+}
+.csv-warning strong { color: var(--warn); }
+.bulk-table-wrap { max-height: 560px; }
+.bulk-table { width: 100%; }
+.bulk-table th.n, .bulk-table td.n { width: 3.5rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.bulk-table td.label { overflow-wrap: anywhere; }
+.bulk-table td.secret-cell { font-family: var(--mono); font-size: 0.95rem; word-break: break-all; }
+.bulk-table td.act { width: 4.5rem; text-align: right; }
+
+@media (max-width: 560px) {
+  .bulk-who { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .count-input { max-width: 9rem; }
+  .bulk-actions .btn { flex: 1 1 auto; }
+  .bulk-table th.n, .bulk-table td.n { display: none; }
+  .bulk-table th, .bulk-table td { padding: 8px; }
+}
+@media print {
+  .bulk-actions, .csv-warning { display: none; }
+}
