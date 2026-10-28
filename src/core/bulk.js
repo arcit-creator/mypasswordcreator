@@ -4,7 +4,7 @@ import { generatePassword, validateOptions } from './generator.js';
 import { generatePassphrase } from './passphrase.js';
 
 export const MIN_COUNT = 1;
-export const MAX_COUNT = 500;
+export const MAX_COUNT = 250;
 export const MAX_LABEL_LENGTH = 200;
 
 // Characters that make Excel, LibreOffice, and Google Sheets treat a cell as

@@ -27,7 +27,7 @@ test('labels set the count and pair one value per label', () => {
 test('parseLabels trims, drops blank lines, caps at the maximum', () => {
   assert.deepEqual(parseLabels('  a \r\n\r\n b\n\nc  \r').labels, ['a', 'b', 'c']);
   assert.deepEqual(parseLabels('').labels, []);
-  const many = parseLabels(Array.from({ length: 510 }, (_, i) => `u${i}`).join('\n'));
+  const many = parseLabels(Array.from({ length: MAX_COUNT + 10 }, (_, i) => `u${i}`).join('\n'));
   assert.equal(many.labels.length, MAX_COUNT);
   assert.equal(many.truncated, 10);
 });
@@ -55,8 +55,8 @@ test('passphrase mode works and is formula-safe', () => {
 });
 
 test('too few possible values fails instead of looping forever', () => {
-  // 4 digits, no repeats: 5,040 possible values, so 500 is fine; a 2-symbol pool is not.
-  assert.equal(generateBulk({ count: 500, options: { length: 4, classes: ['digits'], noRepeats: true } }).length, 500);
+  // 4 digits, no repeats: 5,040 possible values, so MAX_COUNT is fine; a 2-symbol pool is not.
+  assert.equal(generateBulk({ count: MAX_COUNT, options: { length: 4, classes: ['digits'], noRepeats: true } }).length, MAX_COUNT);
   assert.throws(() => generateBulk({ count: 100, options: { length: 4, classes: ['custom'], customSymbols: '!#' } }), /different/);
 });
 
