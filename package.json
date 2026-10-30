@@ -3,7 +3,8 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "MyPasswordCreator.com — static site on Cloudflare Workers",
+  "description": "MyPasswordCreator.com — static site on Cloudflare Pages",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node --test test/*.test.mjs",

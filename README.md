@@ -2,7 +2,7 @@
 
 Static site: password and PIN generator, passphrase generator, Wi-Fi password generator with QR join card,
 and private breach check. Works offline after the first visit (service worker) and can be installed as an app.
-No framework, no runtime dependencies, no server code. Hosted on Cloudflare Workers (static assets).
+No framework, no runtime dependencies, no server code. Hosted on Cloudflare Pages.
 
 ## Layout
 
@@ -48,7 +48,7 @@ Node 20+. No `npm install` needed except for wrangler, which npx fetches.
 
 ## Deploy (live setup: GitHub → Cloudflare Pages)
 
-Repo: github.com/arcit-creator/mypasswordcreator (private). Cloudflare Pages project `mypasswordcreator`:
+Repo: github.com/arcit-creator/mypasswordcreator. Cloudflare Pages project `mypasswordcreator`:
 - Framework preset: None
 - Build command: `npm run build`
 - Build output directory: `dist`
@@ -70,3 +70,17 @@ git push
 The CSP in `public/_headers` blocks every third-party script. Anything added later (AdSense, GA)
 needs its domains added there, and the privacy page and the "no ads / no tracking" lines in
 `tips.html`, `about.html`, and `aside.html` must be updated in the same change.
+
+## License
+
+Copyright (C) 2026 Reggie Cabasal.
+
+The code is free software under the GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`);
+see `LICENSE`. If you run a modified version as a public website, the AGPL requires you to offer
+your modified source to its users.
+
+Third-party parts keep their own licenses (MIT QR library, CC BY EFF word lists, OFL fonts);
+see `THIRD-PARTY-NOTICES.md`.
+
+The license covers the code only. The MyPasswordCreator name, logo, and domain are not licensed
+for reuse: forks must use their own name and branding.
