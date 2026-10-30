@@ -4,5 +4,7 @@
   "supportIntro": "If this site helped you, consider helping us back.",
   "supportLabel": "Buy us a cup of coffee on Ko-fi",
   "businessUrl": "",
-  "businessLabel": "Need this for your business? SecurePasscode."
+  "businessLabel": "Need this for your business? SecurePasscode.",
+  "sourceUrl": "https://github.com/arcit-creator/mypasswordcreator",
+  "sourceLabel": "Source code"
 }

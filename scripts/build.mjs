@@ -17,6 +17,7 @@ const CONFIG = JSON.parse(readFileSync(join(ROOT, 'site.config.json'), 'utf8'));
 const safeUrl = (u) => (typeof u === 'string' && /^https:\/\/[^\s"<>]+$/.test(u) ? u : '');
 const SUPPORT_URL = safeUrl(CONFIG.supportUrl);
 const BUSINESS_URL = safeUrl(CONFIG.businessUrl);
+const SOURCE_URL = safeUrl(CONFIG.sourceUrl);
 const CUP_ICON = '<svg class="cup" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 10h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 11.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c-.8.9-.8 1.6 0 2.5s.8 1.6 0 2.5"/><path d="M12 3.5c-.8.9-.8 1.6 0 2.5s.8 1.6 0 2.5"/></svg>';
 function footerExtras() {
   const out = [];
@@ -128,6 +129,7 @@ for (const file of readdirSync(join(SRC, 'pages')).filter((f) => f.endsWith('.ht
   let html = layout
     .replace('{{content}}', content)
     .replaceAll('{{footerExtras}}', footerExtras())
+    .replaceAll('{{sourceLink}}', SOURCE_URL ? `      <li><a href="${esc(SOURCE_URL)}" rel="noopener">${esc(CONFIG.sourceLabel || 'Source code')}</a></li>` : '')
     .replaceAll('{{title}}', esc(meta.title))
     .replaceAll('{{ogTitle}}', esc(meta.ogTitle || meta.title))
     .replaceAll('{{description}}', esc(meta.description))
