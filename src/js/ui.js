@@ -157,3 +157,9 @@ export function createHistory(root, { max = 10, fileLabel = 'Password' } = {}) {
   render();
   return { add, clear };
 }
+
+/** Reveals the quiet coffee thank-you line after a useful action, if the page has one. */
+export function showThanks() {
+  const el = document.querySelector('[data-thanks]');
+  if (el) el.hidden = false;
+}

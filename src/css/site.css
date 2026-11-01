@@ -845,3 +845,39 @@ ol.steps li { padding-left: 4px; }
 @media print {
   .bulk-actions, .csv-warning { display: none; }
 }
+
+/* ---------- Strength estimate (password check) ---------- */
+
+.check-strength {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--wash);
+}
+.check-strength-line {
+  margin: 0;
+  padding: 12px 16px 0;
+  font-size: 0.95rem;
+}
+.check-strength-tips {
+  margin: 6px 0 0;
+  padding: 0 16px 12px 34px;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+.check-strength-tips:empty { padding-bottom: 6px; }
+
+/* ---------- Coffee thank-you (after a useful action) ---------- */
+
+.thanks {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+.thanks[hidden] { display: none; }
+.thanks .cup { flex: none; margin-top: 1px; color: var(--accent); }
+@media print { .thanks { display: none !important; } }

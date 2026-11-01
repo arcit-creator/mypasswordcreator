@@ -28,6 +28,11 @@ function footerExtras() {
   if (BUSINESS_URL) out.push(`      <p class="footer-extras"><a href="${esc(BUSINESS_URL)}" rel="noopener">${esc(CONFIG.businessLabel || 'For business')}</a></p>`);
   return out.join('\n');
 }
+// Quiet thank-you shown after a useful action (print, download, install). Hidden until JS reveals it.
+function thanksLine() {
+  if (!SUPPORT_URL) return '';
+  return `<p class="thanks" data-thanks hidden>${CUP_ICON}<span>Glad this helped. MyPasswordCreator is free with no ads. If it saved you some time, you can <a href="${esc(SUPPORT_URL)}" rel="noopener">buy us a cup of coffee</a>.</span></p>`;
+}
 function supportPara() {
   if (!SUPPORT_URL) return '';
   return `    <h2>Support this site</h2>\n    <p>MyPasswordCreator is free and has no ads. If it's useful to you, you can <a href="${esc(SUPPORT_URL)}" rel="noopener">buy us a cup of coffee on Ko-fi</a>. Support goes to keeping the site running and building new tools. It isn't a charity, so it isn't tax-deductible.</p>`;
@@ -123,6 +128,7 @@ for (const file of readdirSync(join(SRC, 'pages')).filter((f) => f.endsWith('.ht
   let content = renderPartials(raw.slice(m[0].length))
     .replaceAll('{{lengthTable}}', lengthTable())
     .replaceAll('{{supportPara}}', supportPara())
+    .replaceAll('{{thanksLine}}', thanksLine())
     .replaceAll('{{buildDate}}', new Date(BUILD_DATE + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }));
 
   const url = ORIGIN + (meta.path === '/' ? '/' : meta.path);
@@ -154,7 +160,8 @@ for (const file of readdirSync(join(SRC, 'pages')).filter((f) => f.endsWith('.ht
 // Service worker: precache every page and every asset in this build.
 const swPages = sitemap.map((s) => new URL(s.loc).pathname.replace(/\/$/, '') || '/');
 const swAssets = [
-  ...walk(join(DIST, 'assets', BUILD)).filter((f) => !/LICENSE|\.txt$/.test(f)).map((f) => f.slice(DIST.length).split('\\').join('/')),
+  // zxcvbn.js (~1.6 MB) is left out: it's fetched only on /password-check and cached on first use.
+  ...walk(join(DIST, 'assets', BUILD)).filter((f) => !/LICENSE|\.txt$|zxcvbn\.js$/.test(f)).map((f) => f.slice(DIST.length).split('\\').join('/')),
   '/favicon.svg', '/favicon-32.png', '/apple-touch-icon.png', '/manifest.webmanifest', '/img/icon-192.png', '/img/icon-512.png',
 ];
 writeFileSync(

@@ -1,7 +1,7 @@
 import { generateWifiKey, wifiKeyEntropyBits, wifiQrPayload, WIFI_STYLES, WPA_MIN, WPA_MAX } from '../core/wifi.js';
 import { describeStrength } from '../core/strength.js';
 import qrcode from '../core/qrcode.js';
-import { renderSecret, renderStrength, setRangeFill, copyText, toast, flashButton, createHistory } from './ui.js';
+import { renderSecret, renderStrength, setRangeFill, copyText, toast, flashButton, createHistory, showThanks } from './ui.js';
 
 qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
 
@@ -171,7 +171,11 @@ form.addEventListener('submit', (e) => e.preventDefault());
 cardForm.addEventListener('submit', (e) => e.preventDefault());
 cardForm.addEventListener('input', () => { save(); updateCard(); });
 cardForm.addEventListener('change', () => { save(); updateCard(); });
-printBtn.addEventListener('click', () => window.print());
+printBtn.addEventListener('click', () => {
+  // After the print dialog closes, so the line never lands on the printout.
+  window.addEventListener('afterprint', showThanks, { once: true });
+  window.print();
+});
 
 vault.querySelector('[data-regenerate]').addEventListener('click', generate);
 copyBtn.addEventListener('click', async () => {

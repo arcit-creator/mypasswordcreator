@@ -1,5 +1,6 @@
 // "Get the app" page: shows install steps for the visitor's device, plus a
 // one-click button where the browser supports it (Chrome, Edge, Android).
+import { showThanks } from './ui.js';
 
 const ua = navigator.userAgent;
 const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -121,11 +122,15 @@ btn.addEventListener('click', async () => {
   const choice = await e.userChoice;
   window.__mpcInstallPrompt = null;
   btn.hidden = true;
-  if (choice.outcome === 'accepted') status.textContent = 'Installed. Look for MyPasswordCreator with your other apps.';
+  if (choice.outcome === 'accepted') {
+    status.textContent = 'Installed. Look for MyPasswordCreator with your other apps.';
+    showThanks();
+  }
 });
 window.addEventListener('appinstalled', () => {
   btn.hidden = true;
   status.textContent = 'Installed. Look for MyPasswordCreator with your other apps.';
+  showThanks();
 });
 
 if ('serviceWorker' in navigator) {

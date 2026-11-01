@@ -1,4 +1,5 @@
 import { createChecker, sha1Hex, mapLimit, LookupError } from '../core/hibp.js';
+import { describeStrength, typedPasswordBits } from '../core/strength.js';
 
 const checker = createChecker();
 const MAX_LINES = 2000;
@@ -49,9 +50,76 @@ async function updateDiagram() {
   kSent.textContent = `${hash.slice(0, 5)}  (the other 35 characters stay on your device)`;
 }
 
+// ---- Strength estimate (zxcvbn-ts, loaded only when needed) --------------
+
+const strength = document.querySelector('[data-strength]');
+const sRating = strength.querySelector('[data-rating]');
+const sDetail = strength.querySelector('[data-meter-detail]');
+const sBar = strength.querySelector('[data-meter-bar]');
+const sTips = strength.querySelector('[data-strength-tips]');
+let zxcvbnPromise = null;
+
+function loadZxcvbn() {
+  zxcvbnPromise ??= import('../core/zxcvbn.js').then((m) => m.createZxcvbn()).catch((err) => {
+    zxcvbnPromise = null; // let the next keystroke try again
+    throw err;
+  });
+  return zxcvbnPromise;
+}
+
+function setTips(lines) {
+  sTips.textContent = '';
+  for (const line of lines) {
+    const li = document.createElement('li');
+    li.textContent = line;
+    sTips.appendChild(li);
+  }
+}
+
+let strengthToken = 0;
+async function updateStrength() {
+  const pw = input.value;
+  const token = ++strengthToken;
+  if (!pw) {
+    strength.hidden = true;
+    return;
+  }
+  strength.hidden = false;
+  let zx;
+  try {
+    zx = (await loadZxcvbn()).check(pw);
+  } catch {
+    if (token !== strengthToken) return;
+    sRating.textContent = '';
+    sBar.dataset.level = '';
+    sBar.firstElementChild.style.width = '0';
+    sDetail.textContent = 'The strength check couldn’t load. It needs an internet connection the first time, then works offline.';
+    setTips([]);
+    return;
+  }
+  if (token !== strengthToken) return;
+  const s = describeStrength(typedPasswordBits(pw, zx));
+  sRating.textContent = s.rating.label;
+  sRating.dataset.level = s.rating.key;
+  sBar.dataset.level = s.rating.key;
+  sBar.firstElementChild.style.width = `${Math.max(6, Math.min(100, (s.bits / 128) * 100))}%`;
+  sDetail.textContent = `Guessing it would take ${s.timeText}.`;
+  const tips = [];
+  if (zx.feedback.warning) tips.push(zx.feedback.warning);
+  if (s.rating.key === 'weak' || s.rating.key === 'fair') {
+    tips.push(...zx.feedback.suggestions.slice(0, 1));
+    if ([...pw].length < 15) tips.push('Use at least 15 characters, or a passphrase of 5 or more random words.');
+  }
+  setTips(tips.slice(0, 2));
+}
+
+let strengthTimer;
+input.addEventListener('focus', () => { loadZxcvbn().catch(() => {}); }, { once: true });
 input.addEventListener('input', () => {
   updateDiagram();
   result.hidden = true;
+  clearTimeout(strengthTimer);
+  strengthTimer = setTimeout(updateStrength, 120);
 });
 
 reveal.addEventListener('click', () => {

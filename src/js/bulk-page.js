@@ -4,7 +4,7 @@ import { EFF_WORDLIST } from '../core/eff-wordlist.js';
 import { EFF_SHORT_WORDLIST } from '../core/eff-short-wordlist.js';
 import { generateBulk, parseLabels, toCsv, toTsv, FORMULA_LEAD, MIN_COUNT, MAX_COUNT } from '../core/bulk.js';
 import { describeStrength } from '../core/strength.js';
-import { setRangeFill, copyText, toast, flashButton } from './ui.js';
+import { setRangeFill, copyText, toast, flashButton, showThanks } from './ui.js';
 
 // Only settings are remembered. Passwords and labels never touch storage.
 const STORAGE_KEY = 'mpc.bulk.v1';
@@ -251,6 +251,7 @@ function download() {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   toast('CSV saved. Delete it once it is imported.');
+  showThanks();
 }
 
 // ---- Events ----------------------------------------------------------------

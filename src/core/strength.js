@@ -72,3 +72,41 @@ export function describeStrength(bits) {
     timeText: describeDuration(averageSecondsToGuess(bits)),
   };
 }
+
+// ---- Typed passwords ---------------------------------------------------------
+// A typed password isn't random, so counting its characters overstates it.
+// zxcvbn finds the patterns attackers try first (common passwords, words,
+// names, dates, keyboard runs, l33t). Rule:
+//  - zxcvbn found a pattern → use its guess count (capped by the character math).
+//  - zxcvbn found nothing and it's 15+ characters → treat it as random; zxcvbn's
+//    brute-force estimate (10 per character) understates that, so use the
+//    character math instead. Shorter ones keep zxcvbn's conservative number:
+//    a checker can't tell random from a human pattern it doesn't know
+//    (e.g. "Tr0ub4dor&3"), and 15 matches current NIST guidance.
+
+export const RANDOM_MIN_LENGTH = 15;
+
+/** Bits if every character were picked at random from the classes it uses. */
+export function charsetBits(pw) {
+  const chars = [...pw];
+  if (chars.length === 0) return 0;
+  let pool = 0;
+  if (chars.some((c) => /[a-z]/.test(c))) pool += 26;
+  if (chars.some((c) => /[A-Z]/.test(c))) pool += 26;
+  if (chars.some((c) => /[0-9]/.test(c))) pool += 10;
+  if (chars.some((c) => /[\x20-\x7e]/.test(c) && !/[A-Za-z0-9]/.test(c))) pool += 33;
+  if (chars.some((c) => c > '\x7e')) pool += 100;
+  return chars.length * Math.log2(pool);
+}
+
+/**
+ * Estimated bits for a typed password, given a zxcvbn result
+ * ({ guessesLog10, sequence: [{ pattern }] }).
+ */
+export function typedPasswordBits(pw, zx) {
+  const naive = charsetBits(pw);
+  if (!pw) return 0;
+  const patternless = zx.sequence.length > 0 && zx.sequence.every((m) => m.pattern === 'bruteforce');
+  if (patternless && [...pw].length >= RANDOM_MIN_LENGTH) return naive;
+  return Math.min(naive, zx.guessesLog10 * Math.log2(10));
+}
