@@ -46,10 +46,11 @@ test('no bulk password starts with a formula character', () => {
 });
 
 test('passphrase mode works and is formula-safe', () => {
-  const rows = generateBulk({ kind: 'passphrase', count: 50, options: { wordlist: EFF_WORDLIST, words: 5, addNumber: true } });
+  const rows = generateBulk({ kind: 'passphrase', count: 50, options: { wordlist: EFF_WORDLIST, words: 5, addNumber: true, separator: 'space' } });
   assert.equal(rows.length, 50);
   for (const r of rows) {
-    assert.equal(r.value.split('-').length, 5);
+    // Space separator: some EFF words contain hyphens (t-shirt, yo-yo), none contain spaces.
+    assert.equal(r.value.split(' ').length, 5);
     assert.ok(!startsLikeFormula(r.value));
   }
 });
