@@ -237,6 +237,13 @@ function generate() {
   result.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
 }
 
+// Local calendar date (YYYY-MM-DD). toISOString() is UTC, which shows
+// tomorrow's date in the evening for US time zones.
+function localDate(d = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 function download() {
   if (!rows.length) return;
   // BOM so Excel reads labels with accents correctly.
@@ -245,7 +252,7 @@ function download() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${rowsKind === 'passphrase' ? 'passphrases' : 'passwords'}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `${rowsKind === 'passphrase' ? 'passphrases' : 'passwords'}-${localDate()}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
