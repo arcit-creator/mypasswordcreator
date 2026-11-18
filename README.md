@@ -1,86 +1,74 @@
-# MyPasswordCreator.com
+# MyPasswordCreator
 
-Static site: password and PIN generator, passphrase generator, Wi-Fi password generator with QR join card,
-and private breach check. Works offline after the first visit (service worker) and can be installed as an app.
-No framework, no runtime dependencies, no server code. Hosted on Cloudflare Pages.
+**Free password tools that run entirely in your browser. No sign-up, no ads, no tracking.**
 
-## Layout
+**Live site: [mypasswordcreator.com](https://mypasswordcreator.com)**
+
+![The MyPasswordCreator password generator](docs/screenshot.png)
+
+The code never sends your passwords anywhere, and this page explains how you can check that for yourself.
+
+## What's on the site
+
+- **Passwords and PINs.** Choose the length and character types. Every type you turn on appears at least once, and the strength shown is calculated exactly for your settings. PINs skip the ones people guess first (1234, 1212, birth years, keypad lines).
+- **Safe for scripts, URLs and config files.** Limits symbols to `_` and `.`, so a password can go into a command line, PowerShell, a `mount` option, a connection string or a URL without quoting or escaping.
+- **Picky sites.** Type exactly the symbols a site accepts, and only those are used.
+- **Passphrases.** Random words from the EFF's 7,776-word list (or its 1,296-word short list).
+- **Wi-Fi.** A strong Wi-Fi password and a printable guest card with a QR code that phones scan to join.
+- **Bulk, for admins.** Up to 250 passwords or passphrases at once, matched to a list of usernames if you like, exported as CSV. Values that would start a spreadsheet formula are never produced.
+- **Password check.** A private strength estimate as you type, plus a breach check against Have I Been Pwned.
+- **Works offline.** After your first visit it keeps working with no connection, and it installs as an app.
+
+## Why it exists
+
+I wanted password tools I could hand to anyone, and use myself, without wondering where the password goes. If you already use a password manager, keep using its generator. This site covers what most of them don't: Wi-Fi guest cards, PINs that avoid the obvious ones, bulk batches for onboarding, script-safe passwords, and a strength and breach check that doesn't store or send what you type.
+
+## How to check it yourself
+
+You shouldn't have to take a website's word for this, so here's how to verify it.
+
+1. **Watch the network.** Open your browser's developer tools (F12), go to the Network tab, and generate a few passwords. No requests are made.
+2. **Read the policy the browser enforces.** The site's Content Security Policy is `default-src 'none'`. It allows the page's own files and exactly one outside address, `api.pwnedpasswords.com`, which the breach check uses. Your browser blocks everything else, including any script I might add by mistake. The policy is in [`public/_headers`](public/_headers).
+3. **Compare the code.** The site's own JavaScript isn't minified or bundled, so what your browser runs is the same source you see here. The one exception is the vendored zxcvbn-ts strength library, which ships as a minified bundle and is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) with the command to rebuild it.
+4. **Go offline.** Load the site once, turn off your connection, and keep using it.
+5. **Run your own copy.** See "Run it yourself" below.
+
+### What the breach check sends
+
+The breach check sends only the first 5 characters of the password's SHA-1 hash to [Have I Been Pwned](https://haveibeenpwned.com/Passwords), never the password itself. This is HIBP's k-anonymity model: a 5-character prefix matches hundreds of other hashes, and the comparison against the results happens in your browser. Responses are padded so their size doesn't give the prefix away. HIBP does see your IP address, as any web service does.
+
+### What this doesn't protect against
+
+A website can change its code whenever it likes, and that includes this one. The checks above show what the site does when you look, not what it will do in the future. If that concerns you, install it and use it offline, or run it from your own clone. Like every host, Cloudflare sees normal request logs (IP address, page requested). There are no cookies, no analytics and no third-party scripts. Details: [mypasswordcreator.com/privacy](https://mypasswordcreator.com/privacy).
+
+## How it's built
+
+- Passwords come from `crypto.getRandomValues` with rejection sampling, so every character is equally likely (no modulo bias). `Math.random` isn't used anywhere.
+- No framework, no runtime dependencies, no server code. It's a static site.
+- Security logic lives in small, tested modules in [`src/core/`](src/core/): `random.js`, `generator.js`, `passphrase.js`, `pin.js`, `wifi.js`, `bulk.js`, `hibp.js`, `strength.js`.
+- The strength estimate uses [zxcvbn-ts](https://github.com/zxcvbn-ts/zxcvbn), vendored and loaded only on the check page.
+
+## Run it yourself
+
+Requires Node 20 or newer. There's nothing to `npm install`.
 
 ```
-src/core/      Security logic (pure ES modules, unit-tested, reusable on other sites)
-  random.js      crypto.getRandomValues + rejection sampling (no modulo bias)
-  generator.js   passwords + exact entropy (inclusion–exclusion)
-  passphrase.js  EFF-wordlist passphrases
-  strength.js    rating + time-to-guess (assumes 1e11 guesses/sec)
-  hibp.js        Have I Been Pwned k-anonymity lookup (padding, caching, real errors)
-  pin.js         PINs that skip repeats, runs, years, keypad lines, and known favourites
-  wifi.js        Wi-Fi keys (8–63 chars) and the WIFI: QR payload
-  bulk.js        Bulk batches (1–250, labels), CSV/TSV export with formula-injection guard
-  qrcode.js      Vendored qrcode-generator 1.4.4 (MIT)
-  eff-*.js       EFF large (7,776) and short (1,296) word lists
-src/sw.js      Service worker template (offline support); build fills in the file list
-src/js/        Page scripts (UI only)
-src/css/       site.css (design tokens at the top)
-src/fonts/     Self-hosted Public Sans + JetBrains Mono (OFL)
-src/partials/  layout, vault, aside
-src/pages/     One file per page; JSON meta block at top sets title/description/etc.
-public/        Copied as-is: _headers (CSP etc.), _redirects (old .aspx URLs), icons, OG image
-scripts/       build.mjs (→ dist/), serve.mjs (local preview with real headers)
-test/          node --test
+git clone https://github.com/arcit-creator/mypasswordcreator.git
+cd mypasswordcreator
+npm test          # unit tests
+npm run preview   # builds and serves at http://localhost:8788
 ```
 
-## Site settings (site.config.json)
+## Security issues
 
-- `supportUrl`: your Ko-fi page (must start with https://). When set, a coffee-cup support line appears in the footer (`supportIntro` + linked `supportLabel`) and a short section on the About page. Empty = hidden.
-- `businessUrl`: SecurePasscode.com once it exists. When set, the footer shows "Need this for your business? SecurePasscode." Empty = hidden.
-- Edit the file, then commit and push. Cloudflare rebuilds automatically.
-
-## Commands
-
-```
-npm test          # core unit tests
-npm run build     # builds dist/
-npm run preview   # build + local server at http://localhost:8788 (applies _headers/_redirects)
-npm run deploy    # build + wrangler deploy (needs `npx wrangler login` once)
-```
-
-Node 20+. No `npm install` needed except for wrangler, which npx fetches.
-
-## Deploy (live setup: GitHub → Cloudflare Pages)
-
-Repo: github.com/arcit-creator/mypasswordcreator. Cloudflare Pages project `mypasswordcreator`:
-- Framework preset: None
-- Build command: `npm run build`
-- Build output directory: `dist`
-
-Every push to `main` rebuilds and deploys automatically. Preview URL: https://mypasswordcreator.pages.dev
-Custom domains: mypasswordcreator.com and www.mypasswordcreator.com.
-
-Update workflow:
-```
-git add .
-git commit -m "what changed"
-git push
-```
-
-`wrangler.jsonc` is only used if you ever move to Workers (`npm run deploy`); Pages ignores it.
-
-## Adding ads or analytics later
-
-The CSP in `public/_headers` blocks every third-party script. Anything added later (AdSense, GA)
-needs its domains added there, and the privacy page and the "no ads / no tracking" lines in
-`tips.html`, `about.html`, and `aside.html` must be updated in the same change.
+Please report security issues privately. Instructions are in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Copyright (C) 2026 Reggie Cabasal.
+Copyright (C) 2026 Reggie Cabasal. Free software under the [GNU AGPL v3.0 or later](LICENSE). If you run a modified version as a public website, the AGPL requires you to share your modified source with its users.
 
-The code is free software under the GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`);
-see `LICENSE`. If you run a modified version as a public website, the AGPL requires you to offer
-your modified source to its users.
+Third-party parts keep their own licenses (MIT QR library, MIT zxcvbn-ts, CC BY EFF word lists, OFL fonts). See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
-Third-party parts keep their own licenses (MIT QR library, CC BY EFF word lists, OFL fonts);
-see `THIRD-PARTY-NOTICES.md`.
+The license covers the code, not the MyPasswordCreator name, logo or domain. Forks need their own name and branding.
 
-The license covers the code only. The MyPasswordCreator name, logo, and domain are not licensed
-for reuse: forks must use their own name and branding.
+Maintainer notes (build, deploy, site settings): [docs/MAINTAINING.md](docs/MAINTAINING.md).

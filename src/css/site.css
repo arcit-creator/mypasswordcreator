@@ -194,7 +194,7 @@ code { background: var(--wash); padding: 0.1em 0.35em; border-radius: 4px; }
 
 /* ---------- Page scaffolding ---------- */
 
-.page-head { padding: clamp(32px, 6vw, 64px) 0 28px; }
+.page-head { padding: clamp(32px, 3vw, 40px) 0 28px; }
 .page-head h1 { max-width: 20ch; }
 .section { padding: 48px 0; }
 .section + .section { border-top: 1px solid var(--line); }
