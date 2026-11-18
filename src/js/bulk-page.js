@@ -1,4 +1,4 @@
-import { passwordEntropyBits, validateOptions, sanitizeSymbols, resolveClasses, MIN_LENGTH, MAX_LENGTH } from '../core/generator.js';
+import { passwordEntropyBits, validateOptions, sanitizeSymbols, resolveClasses, applySymbolMode, MIN_LENGTH, MAX_LENGTH } from '../core/generator.js';
 import { passphraseEntropyBits, MIN_WORDS, MAX_WORDS } from '../core/passphrase.js';
 import { EFF_WORDLIST } from '../core/eff-wordlist.js';
 import { EFF_SHORT_WORDLIST } from '../core/eff-short-wordlist.js';
@@ -43,12 +43,11 @@ const clamp = (n, lo, hi, def) => (Number.isFinite(n) ? Math.min(hi, Math.max(lo
 const noun = (k, n) => (k === 'passphrase' ? (n === 1 ? 'passphrase' : 'passphrases') : (n === 1 ? 'password' : 'passwords'));
 
 function passwordOptions() {
-  const custom = form.elements.customon.checked;
-  let classes = [...form.querySelectorAll('input[name="cls"]:checked')].map((i) => i.value);
-  if (custom) {
-    classes = classes.filter((c) => c !== 'symbols' && c !== 'extra');
-    if (sanitizeSymbols(customInput.value)) classes.push('custom');
-  }
+  const scriptSafe = form.elements.scriptsafe.checked;
+  const custom = !scriptSafe && form.elements.customon.checked;
+  const checked = [...form.querySelectorAll('input[name="cls"]:checked')].map((i) => i.value);
+  let classes = applySymbolMode(checked, { scriptSafe, custom });
+  if (custom && !sanitizeSymbols(customInput.value)) classes = classes.filter((c) => c !== 'custom');
   return {
     length: clamp(parseInt(number.value, 10), MIN_LENGTH, MAX_LENGTH, RECOMMENDED),
     classes,
@@ -97,6 +96,7 @@ function save() {
     noRepeats: form.elements.norepeats.checked,
     customOn: form.elements.customon.checked,
     customSymbols: customInput.value,
+    scriptSafe: form.elements.scriptsafe.checked,
     words: clamp(parseInt(wordsNumber.value, 10), MIN_WORDS, MAX_WORDS, 6),
     list: radio('list'), sep: radio('sep'),
     caps: form.elements.caps.checked, digit: form.elements.digit.checked,
@@ -119,7 +119,8 @@ function restore() {
   if (Array.isArray(s.classes)) for (const i of form.querySelectorAll('input[name="cls"]')) i.checked = s.classes.includes(i.value);
   form.elements.lookalikes.checked = !!s.avoidLookalikes;
   form.elements.norepeats.checked = !!s.noRepeats;
-  form.elements.customon.checked = !!s.customOn;
+  form.elements.scriptsafe.checked = !!s.scriptSafe;
+  form.elements.customon.checked = !s.scriptSafe && !!s.customOn;
   if (typeof s.customSymbols === 'string') customInput.value = s.customSymbols.slice(0, 40);
   if (Number.isInteger(s.words)) setWords(clamp(s.words, MIN_WORDS, MAX_WORDS, 6));
   if (s.list) setRadio('list', s.list);
@@ -147,7 +148,7 @@ function refresh() {
   for (const el of form.querySelectorAll('[data-pp-only]')) el.hidden = !isPp;
   const custom = form.elements.customon.checked;
   customWrap.hidden = !custom;
-  stdSymbols.classList.toggle('is-off', custom);
+  stdSymbols.classList.toggle('is-off', custom || form.elements.scriptsafe.checked);
 
   const { n, labels, truncated } = plannedCount();
   countInput.disabled = labels.length > 0;
@@ -270,7 +271,12 @@ countInput.addEventListener('change', () => { countInput.value = String(clamp(pa
 countInput.addEventListener('input', refresh);
 labelsInput.addEventListener('input', refresh);
 customInput.addEventListener('input', refresh);
-form.addEventListener('change', refresh);
+form.addEventListener('change', (e) => {
+  // Script-safe and "only certain symbols" both replace the symbol types, so only one can be on.
+  if (e.target.name === 'scriptsafe' && e.target.checked) form.elements.customon.checked = false;
+  if (e.target.name === 'customon' && e.target.checked) form.elements.scriptsafe.checked = false;
+  refresh();
+});
 form.addEventListener('submit', (e) => { e.preventDefault(); generate(); });
 
 tbody.addEventListener('click', async (e) => {

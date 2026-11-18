@@ -1,4 +1,4 @@
-import { generatePassword, passwordEntropyBits, validateOptions, sanitizeSymbols, MIN_LENGTH, MAX_LENGTH } from '../core/generator.js';
+import { generatePassword, passwordEntropyBits, validateOptions, sanitizeSymbols, applySymbolMode, MIN_LENGTH, MAX_LENGTH } from '../core/generator.js';
 import { generatePin, pinEntropyBits, MIN_PIN, MAX_PIN } from '../core/pin.js';
 import { describeStrength } from '../core/strength.js';
 import { renderSecret, renderStrength, setRangeFill, copyText, toast, flashButton, createHistory } from './ui.js';
@@ -30,9 +30,10 @@ const mode = () => form.querySelector('input[name="mode"]:checked')?.value || 'p
 const clamp = (n, lo, hi, def) => (Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def);
 
 function readOptions() {
-  const custom = form.elements.customon.checked;
-  let classes = [...form.querySelectorAll('input[name="cls"]:checked')].map((i) => i.value);
-  if (custom) classes = classes.filter((c) => c !== 'symbols' && c !== 'extra').concat('custom');
+  const scriptSafe = form.elements.scriptsafe.checked;
+  const custom = !scriptSafe && form.elements.customon.checked;
+  const checked = [...form.querySelectorAll('input[name="cls"]:checked')].map((i) => i.value);
+  const classes = applySymbolMode(checked, { scriptSafe, custom });
   return {
     length: clamp(parseInt(number.value, 10), MIN_LENGTH, MAX_LENGTH, RECOMMENDED),
     classes,
@@ -52,6 +53,7 @@ function save() {
     mode: mode(), length: o.length, avoidLookalikes: o.avoidLookalikes, noRepeats: o.noRepeats,
     classes: [...form.querySelectorAll('input[name="cls"]:checked')].map((i) => i.value),
     customOn: form.elements.customon.checked, customSymbols: customInput.value, pin: readPin(),
+    scriptSafe: form.elements.scriptsafe.checked,
   };
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* optional */ }
 }
@@ -65,7 +67,8 @@ function restore() {
   if (Array.isArray(s.classes)) for (const i of form.querySelectorAll('input[name="cls"]')) i.checked = s.classes.includes(i.value);
   form.elements.lookalikes.checked = !!s.avoidLookalikes;
   form.elements.norepeats.checked = !!s.noRepeats;
-  form.elements.customon.checked = !!s.customOn;
+  form.elements.scriptsafe.checked = !!s.scriptSafe;
+  form.elements.customon.checked = !s.scriptSafe && !!s.customOn;
   if (typeof s.customSymbols === 'string') customInput.value = s.customSymbols.slice(0, 40);
   if (s.pin && Number.isInteger(s.pin.length)) setPinLength(clamp(s.pin.length, MIN_PIN, MAX_PIN, 6));
   if (s.pin && s.pin.avoidWeak === false) form.elements.avoidweak.checked = false;
@@ -88,7 +91,7 @@ function syncVisibility() {
   form.querySelector('[data-pin-only]').hidden = !isPin;
   const custom = form.elements.customon.checked;
   customWrap.hidden = !custom;
-  stdSymbols.classList.toggle('is-off', custom);
+  stdSymbols.classList.toggle('is-off', custom || form.elements.scriptsafe.checked);
   copyLabel.dataset.original = isPin ? 'Copy PIN' : 'Copy password';
   if (!copyBtn.classList.contains('is-done')) copyLabel.textContent = copyLabel.dataset.original;
   secretEl.setAttribute('aria-label', isPin ? 'Generated PIN' : 'Generated password');
@@ -150,6 +153,9 @@ pinNumber.addEventListener('change', () => { setPinLength(clamp(parseInt(pinNumb
 customInput.addEventListener('input', generate);
 form.addEventListener('change', (e) => {
   if ([number, range, pinNumber, pinRange, customInput].includes(e.target)) return;
+  // Script-safe and "only certain symbols" both replace the symbol types, so only one can be on.
+  if (e.target.name === 'scriptsafe' && e.target.checked) form.elements.customon.checked = false;
+  if (e.target.name === 'customon' && e.target.checked) form.elements.scriptsafe.checked = false;
   generate();
 });
 form.addEventListener('submit', (e) => e.preventDefault());

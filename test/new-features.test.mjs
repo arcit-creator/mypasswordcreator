@@ -74,3 +74,22 @@ test('QR encoder produces a symbol for a long payload', () => {
   qr.make();
   assert.ok(qr.getModuleCount() >= 21);
 });
+
+test('script-safe mode uses only letters, digits, _ and .', async () => {
+  const { applySymbolMode, SCRIPT_SAFE_SYMBOLS } = await import('../src/core/generator.js');
+  assert.equal(SCRIPT_SAFE_SYMBOLS, '_.');
+  const classes = applySymbolMode(['upper', 'lower', 'digits', 'symbols', 'extra'], { scriptSafe: true });
+  assert.deepEqual(classes, ['upper', 'lower', 'digits', 'safe']);
+  for (let i = 0; i < 500; i++) {
+    const pw = generatePassword({ length: 16, classes });
+    assert.match(pw, /^[A-Za-z0-9_.]+$/);
+    assert.match(pw, /[_.]/);
+  }
+});
+
+test('script-safe wins over custom symbols; neither leaves classes unchanged', async () => {
+  const { applySymbolMode } = await import('../src/core/generator.js');
+  assert.deepEqual(applySymbolMode(['lower', 'symbols'], { scriptSafe: true, custom: true }), ['lower', 'safe']);
+  assert.deepEqual(applySymbolMode(['lower', 'extra'], { custom: true }), ['lower', 'custom']);
+  assert.deepEqual(applySymbolMode(['lower', 'symbols'], {}), ['lower', 'symbols']);
+});

@@ -7,7 +7,25 @@ export const CHARACTER_CLASSES = Object.freeze({
   digits: '0123456789',
   symbols: '!@#$%^&*-_=+?',
   extra: '()[]{}<>~|:;,./',
+  // "Safe for scripts, URLs and config files": symbols that need no quoting or
+  // escaping in shells, cmd/PowerShell, URLs, mount options or connection
+  // strings. '-' is left out because a value starting with it reads as a
+  // command-line switch.
+  safe: '_.',
 });
+
+export const SCRIPT_SAFE_SYMBOLS = CHARACTER_CLASSES.safe;
+
+/**
+ * Applies the symbol options to the checked character types.
+ * scriptSafe replaces both symbol types with the script-safe set (and
+ * takes precedence over custom); custom replaces them with the user's list.
+ */
+export function applySymbolMode(classes, { scriptSafe = false, custom = false } = {}) {
+  if (!scriptSafe && !custom) return [...classes];
+  const rest = classes.filter((c) => c !== 'symbols' && c !== 'extra' && c !== 'custom' && c !== 'safe');
+  return rest.concat(scriptSafe ? 'safe' : 'custom');
+}
 
 // Characters that are easy to misread in many fonts.
 export const LOOKALIKES = '0Oo1lI|';

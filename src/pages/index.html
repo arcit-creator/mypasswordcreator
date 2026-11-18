@@ -67,6 +67,7 @@
           <div class="checks">
             <label class="check"><input type="checkbox" name="lookalikes"><span>Avoid look-alike characters<small>Leaves out 0 O o 1 l I | so the password is easier to read and type by hand.</small></span></label>
             <label class="check"><input type="checkbox" name="norepeats"><span>No repeated characters<small>Each character is used at most once. Some older systems require this.</small></span></label>
+            <label class="check"><input type="checkbox" name="scriptsafe"><span>Safe for scripts, URLs and config files<small>Uses only _ and . as symbols, so the password can go into command lines, PowerShell, mount options, connection strings and URLs without quoting or escaping. Replaces the two symbol options above.</small></span></label>
             <label class="check"><input type="checkbox" name="customon"><span>The site only accepts certain symbols<small>Type exactly the symbols it allows. They replace the two symbol options above.</small></span></label>
             <div class="custom-symbols" data-custom-wrap hidden>
               <label class="visually-hidden" for="custom-symbols">Allowed symbols</label>
